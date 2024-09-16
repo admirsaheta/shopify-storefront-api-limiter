@@ -7,7 +7,7 @@
 // Most of the time, I would use a interface in C++ 
 typedef struct RateLimiter {
     void (*limit)(const char* url);
-    void (*handle_rate_limit)(long remaining_requests);
+    int  (*handle_rate_limit)(int retries);  
 } RateLimiter;
 
 // We need to initialize the rate limiter because C doesn't have constructors

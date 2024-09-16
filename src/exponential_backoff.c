@@ -1,5 +1,6 @@
 #include "exponential_backoff.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 // Exponential backoff function

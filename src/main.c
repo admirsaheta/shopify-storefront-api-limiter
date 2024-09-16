@@ -1,6 +1,7 @@
 #include "rate_limiter.h"
 #include "exponential_backoff.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
     if(argc < 2) {
@@ -14,6 +15,9 @@ int main(int argc, char **argv) {
     RateLimiter *rate_limiter = new_rate_limiter();
     ExponentialBackoff *backoff = new_exponential_backoff();
 
+    // Set the rate limiter's handle_rate_limit to use backoff's retry_request
+    rate_limiter->handle_rate_limit = backoff->retry_request;
+
     // Simulate making 5 requests with rate limiting and retry logic
     int retries = 0;
     for (int i = 0; i < 5; i++) {
@@ -23,12 +27,11 @@ int main(int argc, char **argv) {
         // Simulate a failed request that requires retries
         if (i % 2 == 0) {
             printf("Request %d failed. Applying exponential backoff...\n", i + 1);
-            if (!backoff->retry_request(retries)) {
+            if (!rate_limiter->handle_rate_limit(retries)) {  
                 break;
             }
+            retries++;
         }
-
-        rate_limiter->handle_rate_limit(rand() % 40);
     }
 
     // Clean up resources

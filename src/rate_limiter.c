@@ -34,8 +34,8 @@ static void make_api_request(const char* url) {
 }
 
 // Handle rate limiting by pausing if necessary
-static void handle_rate_limt(long remaining_requests) {
-    if (remaining_requests < 5) {
+static int handle_rate_limt(int retries) {
+    if (retries < 5) {
         printf("Rate Limit Exceeded. Waiting for 10 seconds...\n");
         sleep(10);
     }
